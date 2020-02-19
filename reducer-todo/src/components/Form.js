@@ -1,44 +1,26 @@
-import React, {useState, useReducer} from 'react'
-import {initialState, Reducer} from '../reducers/Reducer'
-import Todo from './Todo'
-const TodoForm = () => {
-    const [state, dispatch] = useReducer(Reducer, initialState)
-    const [newTodo, setNewTodo] = useState("")
-    const handleChanges = e => {
-        setNewTodo(e.target.value)
+import React, { useState } from 'react';
+import useForm from '../hooks/useForm';
+
+export default function Form({ addToDo }){
+    const [ form, setForm, onChange ] = useForm();
+
+    const handleSubmit = (e, todo) => {
+        addToDo(e, todo)
+        setForm('')
     }
-    const handleSubmit = e => {
-        e.preventDefault();
-        dispatch({type: 'ADD_TODO', payload: newTodo})
-        console.log(state)
-    }
-    const handleClear = e => {
-        e.preventDefault();
-        dispatch({type: "CLEAR", payload: newTodo});
-    }
-        return (
-            <div>
-                <form>
-                    <input
-                    type="text"
-                    placeholder="Add Todo"
-                    name="newTodo"
-                    id='newTodo'
-                    value={newTodo}
-                    onChange={handleChanges}></input>
-                    <button
-                    type="submit"
-                    onClick={handleSubmit}>Add</button>
-                    <button
-                    type="submit"
-                    onClick={handleClear}>Clear Completed</button>
-                </form>
-             <Todo 
-             state={state}
-             dispatch={dispatch}
-             id={state.id} 
-             newTodo={newTodo}/>
-            </div>
-        )
+
+    return (
+        <form onSubmit={(e) => handleSubmit(e, form)}>
+            <label>new todo</label>
+                <input 
+                onChange={onChange} 
+                value={form} 
+                id='form' 
+                name="form" 
+                placeholder="I'm a new todo" />
+
+            <button type="submit">submit</button>
+            
+        </form>
+    )
 }
-export default TodoForm
